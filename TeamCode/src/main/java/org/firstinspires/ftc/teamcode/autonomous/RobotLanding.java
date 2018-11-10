@@ -113,33 +113,67 @@ public class RobotLanding extends LinearOpMode {
         runtime.reset();
 
         //Unlatch
-        while (opModeIsActive() && runtime.seconds()<0.5) {
-            telemetry.addData("Step1","Unlatching....");
-            telemetry.update();
-            robot.setLeftRight(0.8, -0.3,0.8,-0.3);
-        }
+        telemetry.addData("Step1","Unlatching....");
+        telemetry.update();
+        robot.MeccanumLeft(0.2);
+        Wait(1);
+        robot.setLeftRight(0,0,0,0);
+        Wait(2);
+        //Go torward RIGHT
+        telemetry.addData("Step2","Come back torward LEFT");
+        telemetry.update();
+
+        robot.setLeftRight(-0.3,-0.3,-0.3,-0.3);
+        Wait(0.6);
         robot.setLeftRight(0,0,0,0);
         Wait(1);
+        robot.MeccanumRight(0.5);
+        Wait(1.3);
+        robot.setLeftRight(0,0);
 
-        robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
-        Wait(0.75);
+
+//        robot.setLeftRight(-0.3,-0.3,-0.3,-0.3);
+//        Wait(0.5);
+        telemetry.addData("Step 3","Looking for the gold");
+        telemetry.update();
+        while(opModeIsActive() && detector.getAligned() == false) {
+            robot.MeccanumLeft(0.2);
+        }
+        double initialPosition = detector.getXPosition();
         robot.setLeftRight(0,0,0,0);
+        robot.MeccanumRight(0.5);
+        Wait(0.3);
+        robot.setLeftRight(0,0);
+
+        //robot.MeccanumRight(0.1);
+        //Wait(0.2);
+        //robot.setLeftRight(0,0,0,0);
+        Wait(2);
+        robot.setLeftRight(-0.3, -0.3);
+        Wait(2);
+//        Wait(1);
+        robot.setLeftRight(0,0);
+
+
+//        robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
+//        Wait(0.75);
+//        robot.setLeftRight(0,0,0,0);
 //        Wait(2);
 //        telemetry.addData("My name is ","Bob");
 //        telemetry.update();
 //        Wait(1);
 //        telemetry.addData("My name is ","Chinmay");
 //        telemetry.update();
-        while(opModeIsActive() && detector.getAligned() == false){
-            telemetry.addData("Step2","Scanning the block");
-            telemetry.update();
-            robot.setLeftRight(-0.05,0.05,-0.05,0.05);
-        }
-        robot.setLeftRight(0,0,0,0);
-        //        Wait(2);
-        telemetry.addData("X position of the cube", detector.getXPosition());
-        telemetry.update();
-        double initialPosition = detector.getXPosition();
+//        while(opModeIsActive() && detector.getAligned() == false){
+//            telemetry.addData("Step2","Scanning the block");
+//            telemetry.update();
+//            robot.setLeftRight(-0.05,0.05,-0.05,0.05);
+//        }
+//        robot.setLeftRight(0,0,0,0);
+//        //        Wait(2);
+//        telemetry.addData("X position of the cube", detector.getXPosition());
+//        telemetry.update();
+
 //        Wait(2);
         //Commenting the 4 lines below for testing
 //        robot.setLeftRight(0.2,-0.2,0.2,-0.2);
@@ -148,14 +182,14 @@ public class RobotLanding extends LinearOpMode {
 //        Wait(2);
 //        telemetry.addData("X position of the cube", detector.getXPosition());
 //        telemetry.update();
-        runtime.reset();
-        while(opModeIsActive() && runtime.seconds() < 5) {
-            robot.setLeftRight(-0.2,-0.2,-0.2,-0.2);
-            telemetry.addData("X position of the cube", detector.getXPosition());
-            telemetry.addData("What is the value of isFound", detector.isFound());
-            telemetry.update();
-            if(!detector.isFound())break;
-        }
+//        runtime.reset();
+//        while(opModeIsActive() && runtime.seconds() < 5) {
+//            robot.setLeftRight(-0.2,-0.2,-0.2,-0.2);
+//            telemetry.addData("X position of the cube", detector.getXPosition());
+//            telemetry.addData("What is the value of isFound", detector.isFound());
+//            telemetry.update();
+//            if(!detector.isFound())break;
+//        }
 
 
 //        runtime.reset();
