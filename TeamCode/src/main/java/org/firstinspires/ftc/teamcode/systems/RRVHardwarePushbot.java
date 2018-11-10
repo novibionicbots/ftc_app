@@ -104,6 +104,9 @@ public class RRVHardwarePushbot
         rightRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
+//        leftFront.setDirection(DcMotor.Direction.REVERSE);
+//        leftRear.setDirection(DcMotor.Direction.REVERSE);
+
         // Set all motors to zero power
         this.setLeftRight(0,0);
 //        rack_pinion.setPower(0);
@@ -115,15 +118,15 @@ public class RRVHardwarePushbot
 //        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        rack_pinion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
@@ -145,6 +148,14 @@ public class RRVHardwarePushbot
         leftFront.setPower(left);
         rightRear.setPower(RightRear);
         rightFront.setPower(right);
+    }
+    public void MeccanumLeft(double power){
+        setLeftRight(power,-power,-power,power);
+
+    }
+    public void MeccanumRight(double power){
+        setLeftRight(-power,power,power,-power);
+
     }
  }
 
