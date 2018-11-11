@@ -19,7 +19,10 @@ public class TeleopPickup extends LinearOpMode {
     private DcMotor Rack_and_Pinion_Motor;
     private DcMotor lift_Base;
     private DcMotor lift_Extn;
-    double speed = 2;
+    double speed = 1.5;
+    double leftPower;
+    double rightPower;
+    int direction = 1;
     private CRServo servo0;
     // private DigitalChannel digitalTouch;
     // private DistanceSensor sensorColorRange;
@@ -36,8 +39,8 @@ public class TeleopPickup extends LinearOpMode {
         lift_Base = hardwareMap.get(DcMotor.class, "lift_Base");
         lift_Extn = hardwareMap.get(DcMotor.class, "lift_Extn");
         servo0 = hardwareMap.get(CRServo.class, "servo0");
-        left_front.setDirection(DcMotor.Direction.REVERSE);
-        left_back.setDirection(DcMotor.Direction.REVERSE);
+        right_front.setDirection(DcMotor.Direction.REVERSE);
+        right_back.setDirection(DcMotor.Direction.REVERSE);
         // Set to REVERSE if using AndyMark motors
         Rack_and_Pinion_Motor = hardwareMap.get(DcMotor.class, "rack_pinion");
         //   digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
@@ -55,18 +58,21 @@ public class TeleopPickup extends LinearOpMode {
             servo0.setPower(0);
             lift_Extn.setPower(0);
             Rack_and_Pinion_Motor.setPower(0);
-            left_front.setPower(((gamepad1.right_stick_y)/speed));
-            left_back.setPower(((gamepad1.right_stick_y)/speed));
-            right_front.setPower((gamepad1.left_stick_y)/speed);
-            right_back.setPower((gamepad1.left_stick_y)/speed);
+
+            leftPower = Math.cbrt(0.25 *(-gamepad1.left_stick_y - Math.signum(-gamepad1.left_stick_y)*0.5))+ Math.signum(-gamepad1.left_stick_y) * 0.5;
+            rightPower = Math.cbrt(0.25 *(-gamepad1.right_stick_y - Math.signum(-gamepad1.right_stick_y)*0.5))+ Math.signum(-gamepad1.right_stick_y) * 0.5;
+            right_front.setPower(leftPower/speed);
+            right_back.setPower(leftPower/speed);
+            left_back.setPower(rightPower/speed);
+            left_front.setPower(rightPower/speed);
             while(gamepad1.right_bumper){
-                Rack_and_Pinion_Motor.setPower(0.5);
+                Rack_and_Pinion_Motor.setPower(1);
                 telemetry.addData("Rack and Pinion motor","Heading Up");
                 telemetry.update();
             }
 
             while(gamepad1.left_bumper){
-                Rack_and_Pinion_Motor.setPower(-0.5);
+                Rack_and_Pinion_Motor.setPower(-1);
                 telemetry.addData("Rack and Pinion motor","Heading Down");
                 telemetry.update();
             }
@@ -97,14 +103,45 @@ public class TeleopPickup extends LinearOpMode {
 
             }
             if(gamepad1.dpad_down){
-                if(speed == 2){
-                    speed = 4;
+                if(speed == 1.5){
+                    speed = 3;
                 } else {
-                    if(speed == 4){
-                        speed = 2;
+                    if(speed == 3){
+                        speed = 1.5;
                     }
                 }
             }
+            if(gamepad1.dpad_up){
+                if(direction == 1){
+                    direction = 0;
+                    right_front.setDirection(DcMotor.Direction.FORWARD);
+                    right_back.setDirection(DcMotor.Direction.FORWARD);
+                    left_front.setDirection(DcMotor.Direction.REVERSE);
+                    left_back.setDirection(DcMotor.Direction.REVERSE);
+                } else {
+                    if(direction == 0){
+                        direction = 1;
+                        right_front.setDirection(DcMotor.Direction.REVERSE);
+                        right_back.setDirection(DcMotor.Direction.REVERSE);
+                        left_front.setDirection(DcMotor.Direction.FORWARD);
+                        left_back.setDirection(DcMotor.Direction.FORWARD);
+                    }
+                }
+            }
+            while(gamepad1.dpad_right){
+                left_back.setPower(0.5);
+                right_back.setPower(-0.5);
+                left_front.setPower(-0.5);
+                right_front.setPower(0.5);
+            }
+            while(gamepad1.dpad_left){
+                left_back.setPower(-0.5);
+                right_back.setPower(0.5);
+                left_front.setPower(0.5);
+                right_front.setPower(-0.5);
+            }
+
+
             //  while(gamepad1.left_stick_y==-1 && gamepad1.right_stick_y==1){
             //     right_drive.setPower(-1);
             //     left_drive.setPower(1);
@@ -116,7 +153,7 @@ public class TeleopPickup extends LinearOpMode {
 
             //  }
 
-
+            telemetry.addData("Direction is",direction );
             telemetry.addData("Speed",speed);
             telemetry.addData("Power of left front",left_front.getPower());
             telemetry.addData("Power of left back", left_back.getPower());

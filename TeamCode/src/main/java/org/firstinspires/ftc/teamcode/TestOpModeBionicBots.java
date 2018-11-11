@@ -6,7 +6,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="TestOpModeBionicBots")
+import org.firstinspires.ftc.teamcode.systems.Direction;
+import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
+
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.SilverDetector;
+
+
+@TeleOp(name="TestOpModeBionicBots Meccanum Move")
 public class TestOpModeBionicBots extends LinearOpMode {
 
     // Declare OpMode members.
@@ -14,32 +23,100 @@ public class TestOpModeBionicBots extends LinearOpMode {
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
 
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 0.8188976 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
+
+    private SilverDetector detector;
+
+
+    RRVHardwarePushbot robot = new RRVHardwarePushbot();
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status","Initialized");
         telemetry.update();
+        robot.init(hardwareMap);
 
-        double powerLeft = 0;
-        double powerRight = 0;
-
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
-        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        while (opModeIsActive()){
-            powerLeft = -this.gamepad1.left_stick_y;
-            powerRight = -this.gamepad1.right_stick_y;
 
-            telemetry.addData("PowerLeft:",powerLeft);
-            telemetry.addData("PowerRight:",powerRight);
+//        telemetry.addData("Step1","Moving Left....");
+//        telemetry.update();
+//        robot.meccanumMove(0.5,3, Direction.LEFT);
+//
+//        Wait(5);
+//
+//        telemetry.addData("Step1","Moving Left....");
+//        telemetry.update();
+//        robot.meccanumMove(0.5,3, Direction.RIGHT);
 
-            telemetry.update();
+//        encoderDown(1);
 
-            leftDrive.setPower(-0.8 * powerLeft);
-            rightDrive.setPower(0.8 * powerRight);
+        initDetector();
+
+        while(opModeIsActive() && detector.isFound() == false && runtime.seconds() <= 10) {
+            robot.meccanumMove(0.275,-1, Direction.LEFT);
         }
+
+        robot.stop();
+
+        telemetry.addData("Is the cube pushed?",detector.isFound());
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+        Wait(10);
+
+        detector.disable();
+
+
     }
+
+    private void initDetector(){
+        telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
+
+        detector = new SilverDetector();
+
+        // detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),0,false);
+        detector.useDefaults();
+        // Optional Tuning
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005;
+
+        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.perfectRatio = 1.0;
+
+        detector.enable();
+    }
+
+    public void encoderDown(double inches) {
+        runtime.reset();
+        int currentPos = robot.rack_pinion.getCurrentPosition();
+        int finalPos = (int) (currentPos+COUNTS_PER_INCH*inches);
+        telemetry.addData("Current position:",currentPos);
+        telemetry.addData("Final position:",finalPos);
+        telemetry.update();
+        Wait(1);
+        while (opModeIsActive()&& (currentPos < finalPos)) {
+            currentPos = robot.rack_pinion.getCurrentPosition();
+            telemetry.addData("Current position while moving:",currentPos);
+            telemetry.update();
+            robot.rack_pinion.setPower(1.0);
+        }
+
+        robot.rack_pinion.setPower(0);
+    }
+
+    public void Wait(double seconds){
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds()< seconds){}
+    }
+
+
 }

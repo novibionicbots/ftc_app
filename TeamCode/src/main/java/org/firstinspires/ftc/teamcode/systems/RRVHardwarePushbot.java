@@ -76,6 +76,15 @@ public class RRVHardwarePushbot
     public static final double kP_DriveForward = 0.1;
     public static final double kV_Drive        = 1/max_velocity;
 
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 8.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 0.8188976 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
+
+
+    private ElapsedTime     runtime = null;
+
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -89,6 +98,8 @@ public class RRVHardwarePushbot
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
+
+        runtime = new ElapsedTime();
 
         // Define and Initialize Motors
         leftRear  = hwMap.get(DcMotor.class, "left_Rear");
@@ -104,31 +115,10 @@ public class RRVHardwarePushbot
         rightRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
-//        leftFront.setDirection(DcMotor.Direction.REVERSE);
-//        leftRear.setDirection(DcMotor.Direction.REVERSE);
-
+        rack_pinion.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rack_pinion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Set all motors to zero power
         this.setLeftRight(0,0);
-//        rack_pinion.setPower(0);
-
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-//        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-//        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rack_pinion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
 
     /**
@@ -143,19 +133,50 @@ public class RRVHardwarePushbot
         rightFront.setPower(right);
     }
 
-    public void setLeftRight(double left, double right,double LeftRear, double RightRear) {
-        leftRear.setPower(LeftRear);
-        leftFront.setPower(left);
-        rightRear.setPower(RightRear);
-        rightFront.setPower(right);
+    public void setLeftRight(double leftF, double rightF,double LeftR, double RightR) {
+        leftRear.setPower(LeftR);
+        leftFront.setPower(leftF);
+        rightRear.setPower(RightR + (0.2 * RightR));
+        rightFront.setPower(rightF);
     }
-    public void MeccanumLeft(double power){
-        setLeftRight(power,-power,-power,power);
 
+    public void meccanumMove(double power, double time, Direction direction){
+        if (direction == Direction.FORWARD)
+            MeccanumForward(power);
+        else if (direction == Direction.BACK)
+            MeccanumBack(power);
+        else if(direction == Direction.LEFT)
+            MeccanumLeft(power);
+        else if(direction == Direction.RIGHT)
+            MeccanumRight(power);
+
+        if(time != -1) {
+            waitForSeconds(time);
+            this.stop();
+        }
     }
-    public void MeccanumRight(double power){
+
+
+    private void MeccanumBack(double power){
+        setLeftRight(-power,-power,-power,-power);
+    }
+    private void MeccanumForward(double power){
         setLeftRight(-power,power,power,-power);
+    }
+    private void MeccanumLeft(double power){
+        setLeftRight(power,-power,-power,power);
+    }
+    private void MeccanumRight(double power){
+        setLeftRight(-power,power,power,-power);
+    }
 
+    private void waitForSeconds(double seconds){
+        runtime.reset();
+        while(runtime.seconds()< seconds){}
+    }
+
+    public void stop() {
+        this.setLeftRight(0, 0, 0, 0);
     }
  }
 

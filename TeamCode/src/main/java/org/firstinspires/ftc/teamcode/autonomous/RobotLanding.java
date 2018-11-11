@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.systems.Direction;
 import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
 
 /**
@@ -66,7 +67,7 @@ import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Autonomous Landing", group="Pushbot")
+@Autonomous(name="Autonomous Landing - TeamMarker", group="Pushbot")
 //@Disabled
 
 public class RobotLanding extends LinearOpMode {
@@ -77,7 +78,7 @@ public class RobotLanding extends LinearOpMode {
     private GoldAlignDetector detector;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 8.0 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 0.8188976 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
@@ -108,111 +109,52 @@ public class RobotLanding extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        encoderDown(6.5);
+        encoderDown(9.5);
 
         runtime.reset();
 
-        //Unlatch
+        //Move LEFT to Unlatch
         telemetry.addData("Step1","Unlatching....");
         telemetry.update();
-        robot.MeccanumLeft(0.2);
-        Wait(1);
-        robot.setLeftRight(0,0,0,0);
-        Wait(2);
-        //Go torward RIGHT
-        telemetry.addData("Step2","Come back torward LEFT");
+        robot.meccanumMove(0.2,1,Direction.RIGHT);
+        //Move FORWARD
+        telemetry.addData("Step2","Move Backward");
         telemetry.update();
-
-        robot.setLeftRight(-0.3,-0.3,-0.3,-0.3);
-        Wait(0.6);
-        robot.setLeftRight(0,0,0,0);
-        Wait(1);
-        robot.MeccanumRight(0.5);
-        Wait(1.3);
-        robot.setLeftRight(0,0);
-
-
-//        robot.setLeftRight(-0.3,-0.3,-0.3,-0.3);
-//        Wait(0.5);
+        robot.meccanumMove(0.3,0.8,Direction.BACK);
+        //Move RIGHT
+        robot.meccanumMove(0.4,0.9,Direction.RIGHT);
+        //Start scanning
         telemetry.addData("Step 3","Looking for the gold");
         telemetry.update();
-        while(opModeIsActive() && detector.getAligned() == false) {
-            robot.MeccanumLeft(0.2);
+
+        while(opModeIsActive() && detector.getAligned() == false && runtime.seconds() <= 10) {
+            robot.meccanumMove(0.275,-1, Direction.LEFT);
         }
+        //End Scanning - GOLD FOUND
         double initialPosition = detector.getXPosition();
-        robot.setLeftRight(0,0,0,0);
-        robot.MeccanumRight(0.5);
-        Wait(0.3);
-        robot.setLeftRight(0,0);
+        robot.stop();
 
-        //robot.MeccanumRight(0.1);
-        //Wait(0.2);
-        //robot.setLeftRight(0,0,0,0);
-        Wait(2);
-        robot.setLeftRight(-0.3, -0.3);
-        Wait(2);
-//        Wait(1);
-        robot.setLeftRight(0,0);
+        //Position for Knocking
+        robot.meccanumMove(0.375, 0.7, Direction.RIGHT);
 
+        //Move to KNOCK
+        robot.meccanumMove(0.3,1, Direction.BACK);
 
-//        robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
-//        Wait(0.75);
-//        robot.setLeftRight(0,0,0,0);
-//        Wait(2);
-//        telemetry.addData("My name is ","Bob");
-//        telemetry.update();
-//        Wait(1);
-//        telemetry.addData("My name is ","Chinmay");
-//        telemetry.update();
-//        while(opModeIsActive() && detector.getAligned() == false){
-//            telemetry.addData("Step2","Scanning the block");
-//            telemetry.update();
-//            robot.setLeftRight(-0.05,0.05,-0.05,0.05);
-//        }
-//        robot.setLeftRight(0,0,0,0);
-//        //        Wait(2);
-//        telemetry.addData("X position of the cube", detector.getXPosition());
-//        telemetry.update();
-
-//        Wait(2);
-        //Commenting the 4 lines below for testing
-//        robot.setLeftRight(0.2,-0.2,0.2,-0.2);
-//        Wait(0.5);
-//        robot.setLeftRight(0,0,0,0);
-//        Wait(2);
-//        telemetry.addData("X position of the cube", detector.getXPosition());
-//        telemetry.update();
-//        runtime.reset();
-//        while(opModeIsActive() && runtime.seconds() < 5) {
-//            robot.setLeftRight(-0.2,-0.2,-0.2,-0.2);
-//            telemetry.addData("X position of the cube", detector.getXPosition());
-//            telemetry.addData("What is the value of isFound", detector.isFound());
-//            telemetry.update();
-//            if(!detector.isFound())break;
-//        }
-
-
-//        runtime.reset();
-
-//        while (opModeIsActive() && runtime.seconds()<0.75) {
-//            robot.setLeftRight(0, 0.8,0,0.8);
-//        }
-//        while (opModeIsActive()&& runtime.seconds() < 1){
-//            robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
-//        }
-//
-//
-//        robot.setLeftRight(0,0,0,0);
         telemetry.addData("Is the cube pushed?",detector.isFound());
         telemetry.addData("Detecting Gold",detector.getAligned());
         telemetry.addData("Initial position of Gold",initialPosition);
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        robot.setLeftRight(0,0,0,0);
+        Wait(2);
 
+        //Move to drop Team Marker
+//        robot.meccanumMove(0.2,2, Direction.FORWARD);
+
+//        robot.servo0.setPower(-2);
         Wait(10);
 
+        detector.disable();
 
     }
 
@@ -225,15 +167,23 @@ public class RobotLanding extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDown(double inches) {
-        int lastPos = robot.rack_pinion.getCurrentPosition();
-        int finalPos = (int) (lastPos-COUNTS_PER_INCH*inches);
-
-        while (opModeIsActive()&&robot.rack_pinion.getCurrentPosition()>finalPos) {
-            robot.rack_pinion.setPower(-1.0);
+        runtime.reset();
+        int currentPos = robot.rack_pinion.getCurrentPosition();
+        int finalPos = (int) (currentPos+COUNTS_PER_INCH*inches);
+        telemetry.addData("Current position:",currentPos);
+        telemetry.addData("Final position:",finalPos);
+        telemetry.update();
+        Wait(1);
+        while (opModeIsActive()&& (currentPos < finalPos)) {
+            currentPos = robot.rack_pinion.getCurrentPosition();
+            telemetry.addData("Current position while moving:",currentPos);
+            telemetry.update();
+            robot.rack_pinion.setPower(1.0);
         }
 
         robot.rack_pinion.setPower(0);
     }
+
     public void Wait(double seconds){
         runtime.reset();
         while(opModeIsActive() && runtime.seconds()< seconds){}
