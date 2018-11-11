@@ -70,7 +70,7 @@ import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
 @Autonomous(name="Autonomous Landing - TeamMarker", group="Pushbot")
 //@Disabled
 
-public class RobotLanding extends LinearOpMode {
+public class RobotLandingTeamMarker extends LinearOpMode {
 
     /* Declare OpMode members. */
     RRVHardwarePushbot robot = new RRVHardwarePushbot();   // Use a Pushbot's hardware
