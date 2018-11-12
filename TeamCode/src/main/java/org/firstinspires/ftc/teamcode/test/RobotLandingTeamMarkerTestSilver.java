@@ -27,17 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.test;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SilverDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.systems.Detection;
 import org.firstinspires.ftc.teamcode.systems.Direction;
 import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
 
@@ -68,17 +68,16 @@ import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Autonomous Landing - TeamMarker", group="Pushbot")
+@Autonomous(name="TEST Autonomous Landing - TeamMarker using silver", group="Pushbot")
 //@Disabled
 
-public class RobotLandingTeamMarker extends LinearOpMode {
+public class RobotLandingTeamMarkerTestSilver extends LinearOpMode {
 
     /* Declare OpMode members. */
     RRVHardwarePushbot robot = new RRVHardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-    private ElapsedTime     posRunTime = new ElapsedTime();
-
     private GoldAlignDetector detector;
+    private SilverDetector silverDetector;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
@@ -87,8 +86,6 @@ public class RobotLandingTeamMarker extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-    double timeRan;
-    private Detection position = Detection.UNKNOWN;
 
 
     @Override
@@ -114,7 +111,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //encoderDown(9.5);
+//        encoderDown(9.5);
 
         runtime.reset();
 
@@ -131,23 +128,18 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         //Start scanning
         telemetry.addData("Step 3","Looking for the gold");
         telemetry.update();
-        posRunTime.reset();
 
         while(opModeIsActive() && detector.getAligned() == false && runtime.seconds() <= 10) {
+            telemetry.addData("Silver detector:",silverDetector.isFound());
+            telemetry.update();
+            if(silverDetector.isFound()){
+                telemetry.addData("Detected Silver","Silver!");
+                telemetry.update();
+                Wait(1);
+            }
             robot.meccanumMove(0.275,-1, Direction.LEFT);
+
         }
-
-
-        timeRan = posRunTime.milliseconds();
-
-        if(timeRan < 2){
-            position = Detection.LEFT;
-        } else if(timeRan < 4){
-            position = Detection.CENTER;
-        } else {
-            position = Detection.RIGHT;
-        }
-
         //End Scanning - GOLD FOUND
         double initialPosition = detector.getXPosition();
         robot.stop();
@@ -157,10 +149,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
 
         //Move to KNOCK
         robot.meccanumMove(0.3,1, Direction.BACK);
-        dropTeamMarker();
 
-
-        telemetry.addData("Time",timeRan);
         telemetry.addData("Is the cube pushed?",detector.isFound());
         telemetry.addData("Detecting Gold",detector.getAligned());
         telemetry.addData("Initial position of Gold",initialPosition);
@@ -214,9 +203,12 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
 
         detector = new GoldAlignDetector();
+        silverDetector = new SilverDetector();
 
         // detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),0,false);
+        silverDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),0,false);
+
         detector.useDefaults();
         // Optional Tuning
         detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
@@ -230,33 +222,19 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
 
+        //Silver
+        silverDetector.useDefaults();
+        // Optional Tuning
+        silverDetector.downscale = 0.4; // How much to downscale the input frames
+
+        silverDetector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        silverDetector.maxAreaScorer.weight = 0.005;
+
+        silverDetector.ratioScorer.weight = 5;
+        silverDetector.ratioScorer.perfectRatio = 1.0;
+
         detector.enable();
-    }
-
-    private void dropTeamMarker (){
-        if(position == Detection.LEFT){
-            robot.meccanumMove(0.3,1,Direction.BACK);
-            robot.meccanumMove(0.3,0.8,Direction.LEFT);
-            robot.meccanumMove(0.3,0.4,Direction.BACK);
-            robot.servo0.setPower(-2);
-            Wait(1);
-            robot.servo0.setPower(0);
-
-        } else if(position == Detection.CENTER){
-            robot.meccanumMove(0.3,2,Direction.BACK);
-            robot.servo0.setPower(-2);
-            Wait(1);
-            robot.servo0.setPower(0);
-
-
-        } else {
-            robot.meccanumMove(0.3,1,Direction.BACK);
-            robot.meccanumMove(0.3,0.8,Direction.RIGHT);
-            robot.meccanumMove(0.3,0.4,Direction.BACK);
-            robot.servo0.setPower(-2);
-            Wait(1);
-            robot.servo0.setPower(0);
-
-        }
+//        silverDetector.enable();
     }
 }

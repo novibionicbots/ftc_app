@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.test;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -29,7 +30,8 @@ public class TestOpModeBionicBots extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
 
-    private SilverDetector detector;
+//    private SilverDetector detector;
+    private SamplingOrderDetector detector;
 
 
     RRVHardwarePushbot robot = new RRVHardwarePushbot();
@@ -57,11 +59,35 @@ public class TestOpModeBionicBots extends LinearOpMode {
 
         initDetector();
 
+        telemetry.addData("detector.getCurrentOrder()?",detector.getCurrentOrder());
+        telemetry.update();
+
         while(opModeIsActive() && detector.isFound() == false && runtime.seconds() <= 10) {
+            if(detector.getCurrentOrder().equals(SamplingOrderDetector.GoldLocation.LEFT)){
+                telemetry.addData("detector.getCurrentOrder()?",detector.getCurrentOrder());
+                telemetry.update();
+                Wait(1);
+                break;
+            }
+            if(detector.getCurrentOrder().equals(SamplingOrderDetector.GoldLocation.CENTER)){
+                telemetry.addData("detector.getCurrentOrder()?",detector.getCurrentOrder());
+                telemetry.update();
+                Wait(1);
+                break;
+            }
+            if(detector.getCurrentOrder().equals(SamplingOrderDetector.GoldLocation.RIGHT)){
+                telemetry.addData("detector.getCurrentOrder()?",detector.getCurrentOrder());
+                telemetry.update();
+                Wait(1);
+                break;
+            }
             robot.meccanumMove(0.275,-1, Direction.LEFT);
         }
-
         robot.stop();
+
+        telemetry.addData("detector.getCurrentOrder()?",detector.getCurrentOrder());
+        telemetry.addData("Path", "Complete");
+
 
         telemetry.addData("Is the cube pushed?",detector.isFound());
         telemetry.addData("Path", "Complete");
@@ -77,7 +103,9 @@ public class TestOpModeBionicBots extends LinearOpMode {
     private void initDetector(){
         telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
 
-        detector = new SilverDetector();
+//        detector = new SilverDetector();
+
+        detector = new SamplingOrderDetector();
 
         // detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),0,false);
@@ -86,7 +114,7 @@ public class TestOpModeBionicBots extends LinearOpMode {
         detector.downscale = 0.4; // How much to downscale the input frames
 
         detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         detector.maxAreaScorer.weight = 0.005;
 
         detector.ratioScorer.weight = 5;
