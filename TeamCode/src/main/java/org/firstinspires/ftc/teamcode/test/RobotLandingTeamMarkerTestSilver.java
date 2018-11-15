@@ -35,6 +35,7 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.SilverDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -69,7 +70,7 @@ import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
  */
 
 @Autonomous(name="TEST Autonomous Landing - TeamMarker using silver", group="Pushbot")
-//@Disabled
+@Disabled
 
 public class RobotLandingTeamMarkerTestSilver extends LinearOpMode {
 

@@ -109,14 +109,14 @@ public class RobotLandingCrater extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        encoderDown(9.5);
+        encoderDown(10);
 
         runtime.reset();
 
         //Move LEFT to Unlatch
         telemetry.addData("Step1","Unlatching....");
         telemetry.update();
-        robot.meccanumMove(0.2,1,Direction.RIGHT);
+        robot.meccanumMove(0.2,1.5,Direction.RIGHT);
         //Move FORWARD
         telemetry.addData("Step2","Move Backward");
         telemetry.update();
@@ -138,7 +138,7 @@ public class RobotLandingCrater extends LinearOpMode {
         robot.meccanumMove(0.375, 0.7, Direction.RIGHT);
 
         //Move to KNOCK
-        robot.meccanumMove(0.3,1, Direction.BACK);
+        robot.meccanumMove(0.3,3, Direction.BACK);
 
         telemetry.addData("Is the cube pushed?",detector.isFound());
         telemetry.addData("Detecting Gold",detector.getAligned());
@@ -152,7 +152,7 @@ public class RobotLandingCrater extends LinearOpMode {
 //        robot.meccanumMove(0.2,2, Direction.FORWARD);
 
 //        robot.servo0.setPower(-2);
-        Wait(10);
+//        Wait(10);
 
         detector.disable();
 

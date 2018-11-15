@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,7 +21,7 @@ import java.util.TimerTask;
  */
 
 @TeleOp(name = "Kinematic Tester", group = "MP Bot")
-//@Disabled
+@Disabled
 
 public class KinematicTest extends OpMode {
 

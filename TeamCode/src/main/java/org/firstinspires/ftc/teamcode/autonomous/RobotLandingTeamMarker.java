@@ -114,14 +114,14 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //encoderDown(9.5);
+        encoderDown(10);
 
         runtime.reset();
 
         //Move LEFT to Unlatch
         telemetry.addData("Step1","Unlatching....");
         telemetry.update();
-        robot.meccanumMove(0.2,1,Direction.RIGHT);
+        robot.meccanumMove(0.2,1.5,Direction.RIGHT);
         //Move FORWARD
         telemetry.addData("Step2","Move Backward");
         telemetry.update();
@@ -140,9 +140,9 @@ public class RobotLandingTeamMarker extends LinearOpMode {
 
         timeRan = posRunTime.milliseconds();
 
-        if(timeRan < 2){
+        if(timeRan < 2000){
             position = Detection.LEFT;
-        } else if(timeRan < 4){
+        } else if(timeRan < 4000){
             position = Detection.CENTER;
         } else {
             position = Detection.RIGHT;
@@ -173,7 +173,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
 //        robot.meccanumMove(0.2,2, Direction.FORWARD);
 
 //        robot.servo0.setPower(-2);
-        Wait(10);
+//        Wait(10);
 
         detector.disable();
 

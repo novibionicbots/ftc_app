@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -29,7 +30,7 @@ import motionProfileGenerator.ftc.tools.Config;
  * For this class to work the Hardware file constants need to match your robot
  */
 @Autonomous(name = "MPDriveForward", group = "MP Bot")
-// @Disabled
+ @Disabled
 
 public class LinearMotionProfileTest extends LinearOpMode {
 
