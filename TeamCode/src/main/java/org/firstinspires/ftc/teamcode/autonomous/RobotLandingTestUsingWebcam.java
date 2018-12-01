@@ -140,7 +140,12 @@ public class RobotLandingTestUsingWebcam extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+//        waitForStart();
+
+        while (!opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("status", "waiting for start command...");
+            telemetry.update();
+        }
 
 //        encoderDown(6.5);
 

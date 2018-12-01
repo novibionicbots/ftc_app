@@ -87,7 +87,12 @@ public class RobotLandingCrater extends LinearOpMode {
         initDetector();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+//        waitForStart();
+
+        while (!opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("status", "waiting for start command...");
+            telemetry.update();
+        }
 
         encoderDown(7.3);
 
@@ -191,4 +196,5 @@ public class RobotLandingCrater extends LinearOpMode {
 
         detector.enable();
     }
+
 }

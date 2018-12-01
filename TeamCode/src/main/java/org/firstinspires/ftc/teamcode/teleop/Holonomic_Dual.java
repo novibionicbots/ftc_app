@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode;
 /*
 This code tells the program that this is the location of the program.
 */
 
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -21,13 +20,12 @@ CRServo,DistanceSensor, etc. FIRST knew this, so they created a package, or a re
 that keeps the code defining what each term means. This code is telling the program to
 import these terms so that the program will not be confused on any term
 */
-@Disabled
 @TeleOp
 /*
 This code is telling the program that this is a TeleOp program, or a driver controlled
 program.
 */
-public class Holonomic_Dual_Backup extends LinearOpMode {
+public class Holonomic_Dual extends LinearOpMode {
     /*
     This code tells the name of the program, and tells it that it gets a bit of code from
     a seperate program called LinearOpMode. More of LinearOpMode will be shown later.
@@ -90,7 +88,13 @@ public class Holonomic_Dual_Backup extends LinearOpMode {
         /*
         This code displays a message on the robot stating that the robot is intialized
         */
-        waitForStart();
+//        waitForStart();
+
+        while (!opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("status", "waiting for start command...");
+            telemetry.update();
+        }
+
         /*
         This code tells the robot wait for the game to start (driver presses PLAY)
         */
@@ -184,7 +188,7 @@ public class Holonomic_Dual_Backup extends LinearOpMode {
             motor head up, and displays a message saying the power of the lift_Base Motor.
             */
             while(gamepad2.y){
-                lift_Extn.setPower(0.5);
+                lift_Extn.setPower(1.0);
                 telemetry.addData("lift_Extn Motor",lift_Extn.getPower());
             }
             /*
@@ -192,7 +196,7 @@ public class Holonomic_Dual_Backup extends LinearOpMode {
             of the lift_Extn motor
             */
             while(gamepad2.a){
-                lift_Extn.setPower(-0.5);
+                lift_Extn.setPower(-1.0);
                 telemetry.addData("lift_Extn Motor",lift_Extn.getPower());
             }
             /*
