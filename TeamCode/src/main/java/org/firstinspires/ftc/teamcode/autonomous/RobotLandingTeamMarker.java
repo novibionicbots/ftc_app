@@ -81,7 +81,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
     private GoldAlignDetector detector;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = 8.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 0.8188976 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
@@ -114,7 +114,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        encoderDown(10);
+        encoderDown(7.3);
 
         runtime.reset();
 
@@ -153,7 +153,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         robot.stop();
 
         //Position for Knocking
-        robot.meccanumMove(0.375, 0.7, Direction.RIGHT);
+        robot.meccanumMove(0.375, 0.4, Direction.RIGHT);
 
         //Move to KNOCK
         robot.meccanumMove(0.3,1, Direction.BACK);

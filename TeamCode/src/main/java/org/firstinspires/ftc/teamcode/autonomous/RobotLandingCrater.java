@@ -41,27 +41,7 @@ import org.firstinspires.ftc.teamcode.systems.Direction;
 import org.firstinspires.ftc.teamcode.systems.RRVHardwarePushbot;
 
 /**
- * This file illustrates the concept of driving a path based on encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ * This is our autonomous program, lands, unlatch, detect, knock and drop team marker
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
@@ -78,7 +58,7 @@ public class RobotLandingCrater extends LinearOpMode {
     private GoldAlignDetector detector;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 4.0 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = 8.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 0.8188976 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
@@ -109,7 +89,7 @@ public class RobotLandingCrater extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        encoderDown(10);
+        encoderDown(7.3);
 
         runtime.reset();
 
@@ -135,7 +115,7 @@ public class RobotLandingCrater extends LinearOpMode {
         robot.stop();
 
         //Position for Knocking
-        robot.meccanumMove(0.375, 0.7, Direction.RIGHT);
+        robot.meccanumMove(0.375, 0.4, Direction.RIGHT);
 
         //Move to KNOCK
         robot.meccanumMove(0.3,3, Direction.BACK);

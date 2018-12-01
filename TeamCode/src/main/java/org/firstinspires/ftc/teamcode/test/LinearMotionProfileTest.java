@@ -30,7 +30,7 @@ import motionProfileGenerator.ftc.tools.Config;
  * For this class to work the Hardware file constants need to match your robot
  */
 @Autonomous(name = "MPDriveForward", group = "MP Bot")
- @Disabled
+@Disabled
 
 public class LinearMotionProfileTest extends LinearOpMode {
 
