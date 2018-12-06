@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop;
 /*
 This code tells the program that this is the location of the program.
 */
@@ -6,13 +6,9 @@ This code tells the program that this is the location of the program.
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Gyroscope;
-import com.qualcomm.robotcore.hardware.Servo;
 /*
 Whenever anyone programs on android studio or on OnBotJava, you most likely use a
 motor/servo/sensor, and regular java programming has not defined the term DcMotor,Gyroscope,
@@ -25,7 +21,7 @@ import these terms so that the program will not be confused on any term
 This code is telling the program that this is a TeleOp program, or a driver controlled
 program.
 */
-public class Holonomic_Dual extends LinearOpMode {
+public class HolonomicSingleGamePad extends LinearOpMode {
     /*
     This code tells the name of the program, and tells it that it gets a bit of code from
     a seperate program called LinearOpMode. More of LinearOpMode will be shown later.
@@ -169,8 +165,8 @@ public class Holonomic_Dual extends LinearOpMode {
            This code says that, while the left bumper is pressed, the lander motor will
            head down, and will also display a message saying that it is heading down
            */
-            while(gamepad2.right_trigger > 0){
-                lift_Base.setPower(gamepad2.right_trigger/4);
+            while(gamepad1.right_trigger > 0){
+                lift_Base.setPower(gamepad1.right_trigger/4);
                 telemetry.addData("lift_Base Motor",lift_Base.getPower());
                 telemetry.update();
             }
@@ -178,8 +174,8 @@ public class Holonomic_Dual extends LinearOpMode {
             This code says that while the right trigger is pressed, than make the lift_Base
             motor head down, and displays a message saying the power of the lift_Base Motor.
             */
-            while(gamepad2.left_trigger > 0){
-                lift_Base.setPower(-(gamepad2.left_trigger)/2);
+            while(gamepad1.left_trigger > 0){
+                lift_Base.setPower(-(gamepad1.left_trigger)/2);
                 telemetry.addData("lift_Base Motor",lift_Base.getPower());
                 telemetry.update();
             }
@@ -187,23 +183,23 @@ public class Holonomic_Dual extends LinearOpMode {
             This code says that while the left trigger is pressed, than make the lift_Base
             motor head up, and displays a message saying the power of the lift_Base Motor.
             */
-            while(gamepad2.y){
-                lift_Extn.setPower(1.0);
+            while(gamepad1.y){
+                lift_Extn.setPower(0.5);
                 telemetry.addData("lift_Extn Motor",lift_Extn.getPower());
             }
             /*
             This code makes the lift_Extn Motor head down, and displays a message giving the power
             of the lift_Extn motor
             */
-            while(gamepad2.a){
-                lift_Extn.setPower(-1.0);
+            while(gamepad1.a){
+                lift_Extn.setPower(-0.5);
                 telemetry.addData("lift_Extn Motor",lift_Extn.getPower());
             }
             /*
             This code makes the lift_Extn Motor head up, and displays a message giving the power
             of the lift_Extn motor
             */
-            while(gamepad2.x){
+            while(gamepad1.x){
                 servo0.setPower(2);
 
             }
@@ -211,7 +207,7 @@ public class Holonomic_Dual extends LinearOpMode {
             This code sets the power of the servo, servo0, to 2, and makes it pick up blocks
             and balls
             */
-            while(gamepad2.b){
+            while(gamepad1.b){
                 servo0.setPower(-2);
             }
             /*
