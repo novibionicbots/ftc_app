@@ -41,6 +41,7 @@ public class TelePickupDualGamePad extends LinearOpMode {
     double rightPower;
     double speed = 1.5;
     int direction = 1;
+    double armSpeed = 0.625;
     /*
     This code initalizes what variables are going to be used. These variable support the
     driver and makes the driving easier. The code for these variables will be shown later
@@ -157,11 +158,17 @@ public class TelePickupDualGamePad extends LinearOpMode {
             motor head down, and displays a message saying the power of the lift_Base Motor.
             */
             while(gamepad2.left_trigger > 0){
-                lift_Base.setPower(-(gamepad2.left_trigger)/2);
+                lift_Base.setPower((-(gamepad2.left_trigger))*armSpeed);
                 telemetry.addData("lift_Base Motor",lift_Base.getPower());
                 telemetry.update();
                 move();
 
+            }
+            if(gamepad2.left_bumper){
+                armSpeed = 0.75;
+            }
+            if(gamepad2.right_bumper){
+                armSpeed = 0.625;
             }
             /*
             This code says that while the left trigger is pressed, than make the lift_Base

@@ -4,6 +4,8 @@ This code tells the program that this is the location of the program.
 */
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,6 +19,7 @@ that keeps the code defining what each term means. This code is telling the prog
 import these terms so that the program will not be confused on any term
 */
 @TeleOp
+@Disabled
 /*
 This code is telling the program that this is a TeleOp program, or a driver controlled
 program.
