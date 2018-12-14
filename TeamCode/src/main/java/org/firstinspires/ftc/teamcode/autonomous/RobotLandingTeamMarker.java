@@ -119,7 +119,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
             telemetry.update();
         }
 
-        encoderDown(7.3);
+        encoderDown(7.5);
 
         runtime.reset();
 
@@ -256,7 +256,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
 
         } else {
             robot.meccanumMove(0.3,1,Direction.BACK);
-            robot.meccanumMove(0.3,0.8,Direction.RIGHT);
+            robot.meccanumMove(0.3,0.9,Direction.RIGHT);
             robot.meccanumMove(0.3,0.4,Direction.BACK);
             robot.servo0.setPower(-2);
             Wait(1);

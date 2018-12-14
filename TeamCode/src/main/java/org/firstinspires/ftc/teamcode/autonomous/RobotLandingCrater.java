@@ -94,7 +94,7 @@ public class RobotLandingCrater extends LinearOpMode {
             telemetry.update();
         }
 
-        encoderDown(7.3);
+        encoderDown(7.5);
 
         runtime.reset();
 

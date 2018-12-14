@@ -47,7 +47,7 @@ public class HolonomicDualGamePadSimultaneous extends LinearOpMode {
     double speed = 1.5;
     double scale;
     int direction = 1;
-    double armSpeed = 0.75;
+    double armSpeed = 0.625;
     /*
     This code initalizes what variables are going to be used. These variable support the
     driver and makes the driving easier. The code for these variables will be shown later

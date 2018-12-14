@@ -16,6 +16,7 @@ CRServo,DistanceSensor, etc. FIRST knew this, so they created a package, or a re
 that keeps the code defining what each term means. This code is telling the program to
 import these terms so that the program will not be confused on any term
 */
+//@Disabled
 @TeleOp
 /*
 This code is telling the program that this is a TeleOp program, or a driver controlled
@@ -88,7 +89,6 @@ public class TelePickupDualGamePad extends LinearOpMode {
             telemetry.addData("status", "waiting for start command...");
             telemetry.update();
         }
-
         /*
         This code tells the robot wait for the game to start (driver presses PLAY)
         */
@@ -131,6 +131,8 @@ public class TelePickupDualGamePad extends LinearOpMode {
                 Rack_and_Pinion_Motor.setPower(1);
                 telemetry.addData("Rack and Pinion motor","Heading Up");
                 telemetry.update();
+                armMove();
+
             }
            /*
            This code says that, while the right bumper is pressed, the lander motor will
@@ -141,6 +143,8 @@ public class TelePickupDualGamePad extends LinearOpMode {
                 Rack_and_Pinion_Motor.setPower(-1);
                 telemetry.addData("Rack and Pinion motor","Heading Down");
                 telemetry.update();
+                armMove();
+
             }
             /*
            This code says that, while the left bumper is pressed, the lander motor will
@@ -158,18 +162,20 @@ public class TelePickupDualGamePad extends LinearOpMode {
             motor head down, and displays a message saying the power of the lift_Base Motor.
             */
             while(gamepad2.left_trigger > 0){
-                lift_Base.setPower((-(gamepad2.left_trigger))*armSpeed);
+                lift_Base.setPower((-(gamepad2.left_trigger)) * 3/4);
                 telemetry.addData("lift_Base Motor",lift_Base.getPower());
                 telemetry.update();
                 move();
 
             }
+
             if(gamepad2.left_bumper){
                 armSpeed = 0.75;
             }
             if(gamepad2.right_bumper){
                 armSpeed = 0.625;
             }
+
             /*
             This code says that while the left trigger is pressed, than make the lift_Base
             motor head up, and displays a message saying the power of the lift_Base Motor.
@@ -268,15 +274,15 @@ public class TelePickupDualGamePad extends LinearOpMode {
             }
             while(gamepad1.dpad_right){
                 if(direction == 1){
-                    left_back.setPower(0.5);
-                    right_back.setPower(-0.5);
-                    left_front.setPower(-0.5);
-                    right_front.setPower(0.5);
+                    left_back.setPower(1);
+                    right_back.setPower(-1);
+                    left_front.setPower(-1);
+                    right_front.setPower(1);
                 } else {
-                    left_back.setPower(-0.5);
-                    right_back.setPower(0.5);
-                    left_front.setPower(0.5);
-                    right_front.setPower(-0.5);
+                    left_back.setPower(-1);
+                    right_back.setPower(1);
+                    left_front.setPower(1);
+                    right_front.setPower(-1);
                 }
 
             }
@@ -285,15 +291,15 @@ public class TelePickupDualGamePad extends LinearOpMode {
             */
             while(gamepad1.dpad_left){
                 if(direction == 1){
-                    left_back.setPower(-0.5);
-                    right_back.setPower(0.5);
-                    left_front.setPower(0.5);
-                    right_front.setPower(-0.5);
+                    left_back.setPower(-1);
+                    right_back.setPower(1);
+                    left_front.setPower(1);
+                    right_front.setPower(-1);
                 } else {
-                    left_back.setPower(0.5);
-                    right_back.setPower(-0.5);
-                    left_front.setPower(-0.5);
-                    right_front.setPower(0.5);
+                    left_back.setPower(1);
+                    right_back.setPower(-1);
+                    left_front.setPower(-1);
+                    right_front.setPower(1);
                 }
             }
             /*
@@ -375,5 +381,53 @@ public class TelePickupDualGamePad extends LinearOpMode {
                 left_front.setPower(leftPower/speed);
             }
         }
+    }
+    public void armMove(){
+        if(gamepad2.y){
+            lift_Extn.setPower(0.5);
+
+        } else if(gamepad2.a){
+            lift_Extn.setPower(-0.5);
+
+        } else {
+            lift_Extn.setPower(0);
+
+        }
+        if(gamepad2.right_trigger > 0){
+            lift_Base.setPower(gamepad2.right_trigger/4);
+            telemetry.addData("lift_Base Motor",lift_Base.getPower());
+            telemetry.update();
+
+
+        } else if(gamepad2.left_trigger > 0){
+            lift_Base.setPower((-(gamepad2.left_trigger)) * 3/4);
+            telemetry.addData("lift_Base Motor",lift_Base.getPower());
+            telemetry.update();
+
+
+        } else {
+            lift_Base.setPower(0);
+
+        }
+        if(gamepad2.x){
+            servo0.setPower(2);
+
+
+
+        } else if(gamepad2.b){
+            servo0.setPower(-2);
+
+
+        }
+
+
+            /*
+            This code sets the power of the servo, servo0, to 2, and makes it pick up blocks
+            and balls
+            */
+
+
+
+
     }
 }
