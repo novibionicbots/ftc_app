@@ -94,18 +94,18 @@ public class RobotLandingCrater extends LinearOpMode {
             telemetry.update();
         }
 
-        encoderDown(7.5);
+        encoderDown(7.3);
 
         runtime.reset();
 
         //Move LEFT to Unlatch
         telemetry.addData("Step1","Unlatching....");
         telemetry.update();
-        robot.meccanumMove(0.2,1.5,Direction.RIGHT);
+        robot.meccanumMove(0.275,1,Direction.RIGHT);
         //Move FORWARD
         telemetry.addData("Step2","Move Backward");
         telemetry.update();
-        robot.meccanumMove(0.3,0.8,Direction.BACK);
+        robot.meccanumMove(0.3,0.9,Direction.BACK);
         //Move RIGHT
         robot.meccanumMove(0.4,0.9,Direction.RIGHT);
         //Start scanning
@@ -113,17 +113,18 @@ public class RobotLandingCrater extends LinearOpMode {
         telemetry.update();
 
         while(opModeIsActive() && detector.getAligned() == false && runtime.seconds() <= 10) {
-            robot.meccanumMove(0.275,-1, Direction.LEFT);
+            robot.meccanumMove(0.3,-1, Direction.LEFT);
         }
         //End Scanning - GOLD FOUND
         double initialPosition = detector.getXPosition();
         robot.stop();
 
         //Position for Knocking
-        robot.meccanumMove(0.375, 0.4, Direction.RIGHT);
+//        robot.meccanumMove(0.375, 0.4, Direction.RIGHT);
+        robot.meccanumMove(0.375, 0.55, Direction.RIGHT);
 
         //Move to KNOCK
-        robot.meccanumMove(0.3,3, Direction.BACK);
+        robot.meccanumMove(0.4,3, Direction.BACK);
 
         telemetry.addData("Is the cube pushed?",detector.isFound());
         telemetry.addData("Detecting Gold",detector.getAligned());

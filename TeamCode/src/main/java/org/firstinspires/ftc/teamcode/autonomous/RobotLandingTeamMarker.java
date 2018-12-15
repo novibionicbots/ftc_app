@@ -119,18 +119,18 @@ public class RobotLandingTeamMarker extends LinearOpMode {
             telemetry.update();
         }
 
-        encoderDown(7.5);
+        encoderDown(7.3);
 
         runtime.reset();
 
         //Move LEFT to Unlatch
         telemetry.addData("Step1","Unlatching....");
         telemetry.update();
-        robot.meccanumMove(0.2,1.5,Direction.RIGHT);
+        robot.meccanumMove(0.275,1,Direction.RIGHT);
         //Move FORWARD
         telemetry.addData("Step2","Move Backward");
         telemetry.update();
-        robot.meccanumMove(0.3,0.8,Direction.BACK);
+        robot.meccanumMove(0.3,0.9,Direction.BACK);
         //Move RIGHT
         robot.meccanumMove(0.4,0.9,Direction.RIGHT);
         //Start scanning
@@ -139,7 +139,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         posRunTime.reset();
 
         while(opModeIsActive() && detector.getAligned() == false && runtime.seconds() <= 10) {
-            robot.meccanumMove(0.275,-1, Direction.LEFT);
+            robot.meccanumMove(0.3,-1, Direction.LEFT);
         }
 
 
@@ -158,7 +158,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
         robot.stop();
 
         //Position for Knocking
-        robot.meccanumMove(0.375, 0.4, Direction.RIGHT);
+        robot.meccanumMove(0.375, 0.55, Direction.RIGHT);
 
         //Move to KNOCK
         robot.meccanumMove(0.3,1, Direction.BACK);
@@ -240,8 +240,8 @@ public class RobotLandingTeamMarker extends LinearOpMode {
 
     private void dropTeamMarker (){
         if(position == Detection.LEFT){
-            robot.meccanumMove(0.3,1,Direction.BACK);
-            robot.meccanumMove(0.3,0.8,Direction.LEFT);
+            robot.meccanumMove(0.3,0.9,Direction.BACK);
+            robot.meccanumMove(0.3,1.5,Direction.LEFT);
             robot.meccanumMove(0.3,0.4,Direction.BACK);
             robot.servo0.setPower(-2);
             Wait(1);
@@ -256,7 +256,7 @@ public class RobotLandingTeamMarker extends LinearOpMode {
 
         } else {
             robot.meccanumMove(0.3,1,Direction.BACK);
-            robot.meccanumMove(0.3,0.9,Direction.RIGHT);
+            robot.meccanumMove(0.3,1.1,Direction.RIGHT);
             robot.meccanumMove(0.3,0.4,Direction.BACK);
             robot.servo0.setPower(-2);
             Wait(1);
